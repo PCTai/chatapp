@@ -45,7 +45,7 @@ const ListRoom = () => {
   return (
     <div className="mt-4">
       <h3 className="">List Room</h3>
-      <div className=" mb-4 h-64 overflow-y-auto">
+      <div className=" mb-4 max-h-48 overflow-y-auto">
         {rooms.map((room, index) =>(
           <Link to={`${room.id}`}
           key={index} >

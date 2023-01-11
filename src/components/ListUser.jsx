@@ -30,7 +30,7 @@ const ListUser = () => {
   };
   //  console.log(Object.entries(chats));
   return (
-    <div className="  mt-2 pb-6 h-48 overflow-y-auto">
+    <div className="  mt-2 pb-6  max-h-48 overflow-y-auto">
       
       {chats && Object.entries(chats)
         ?.sort((a, b) => b[1].date - a[1].date)
