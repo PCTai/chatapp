@@ -25,7 +25,8 @@ const Messsage = ({ message, url }) => {
             <img className="w-8 h-8 rounded-full" src={currentUser.uid===message.senderId ? currentUser.photoURL : message.url} alt="" />
           </div>
           <div className="">
-            <div className="border-2 rounded-md bg-slate-200 border-gray-300 p-4">
+            {message.img && <img src={message.img} className="mb-1" alt=""/>}
+            <div className="border-2 rounded-md bg-slate-200 border-gray-300 p-2">
               {message.text}
             </div>
           </div>

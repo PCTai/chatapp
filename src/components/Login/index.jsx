@@ -42,29 +42,37 @@ const Login = () => {
     <div className='container m-auto h-screen flex justify-center items-center'>
       {
         loading ? (<h3 className='text-center'>Loading .....</h3>) :
-          <form action="" className='w-96 p-6 m-auto bg-gray-900 rounded-lg text-white' onSubmit={handleLogin}>
-            <h1 className='font-semibold text-center'>Login</h1>
+          <form action="" className='text-gray-300 max-w-3xl w-96 p-6 pl-10 pr-10 m-auto bg-gray-bg rounded-lg ' onSubmit={handleLogin}>
+            <h1 className='font-semibold text-center text-3xl mb-6 '>Login</h1>
+           
             <div className="mt-4">
-              <label htmlFor="email">Email</label>
+              
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                type="email" name='email' placeholder='Enter your email' className='text-gray-900 p-1 pl-4 pr-4 mt-4 border-2 outline-none rounded w-full' />
+                type="email" name='email' placeholder='Email' 
+                className='text-gray-200 bg-transparent  placeholder:text-gray-500 pt-4 pb-4 text-lg  border-b-2 border-gray-500 outline-none w-full' />
             </div>
             <div className="mt-4">
-              <label htmlFor="password">Password</label>
+              
               <input
                 value={password}
                 onChange={(e) => setPassword(e.target.value)} autoComplete="on"
-                type="password" name='password' placeholder='Enter your password ' className='text-gray-900 w-full p-1 pl-4 pr-4 mt-4 border-2 outline-none rounded' />
+                type="password" name='password' placeholder='Password ' 
+                className='text-gray-200 bg-transparent  placeholder:text-gray-500 pt-4 pb-4 text-lg  border-b-2 border-gray-500 outline-none w-full' />
             </div>
-            <div className="p-6">
-                <button onClick={handleLoginFB} className='bg-blue-900 block w-full mt-4 p-2 text-white rounded-3xl shadow-sm shadow-slate-300 hover:opacity-80'>Login with facebook</button>
-                <button className='bg-white text-gray-900 block  w-full mt-4 p-2 mb-6  rounded-3xl shadow-sm shadow-slate-300 hover:opacity-80'>Login with google</button>
-              </div>
-            <button type='submit' className='mt-6 p-2 w-full bg-white text-gray-900 rounded-lg font-medium'>Login</button>
+            
+            <button type='submit' className='mt-6 p-2 w-full text-white bg-green-500 rounded-sm font-medium'>Login</button>
 
-            <h3 className="mt-2 text-center text-sm">Don't have account? <Link to={"/register"}>Create an acount</Link></h3>
+            <Link to={"/register"}> <h3  className="mt-2 text-center text-sm">Don't have account?</h3></Link>
+            <div className="mt-4">
+                {/* <h3 className='text-center '>Login with</h3> */}
+                <div className="flex items-center mt-2 justify-center">
+                <div onClick={handleLoginFB} className='bg-blue-900 flex-1 text-center text-gray-200 p-2 text-sm  rounded-sm hover:opacity-80'><i className="fa-brands fa-facebook mr-2"></i>Facebook</div>
+                <h3 className='ml-2 mr-2'>or</h3>
+                <div className='bg-white flex-1 text-center text-gray-900 p-2 text-sm  rounded-sm hover:opacity-80'><i className="fa-brands fa-google mr-2"></i>Google</div>
+                </div>
+              </div>
           </form>
       }
 

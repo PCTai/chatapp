@@ -23,14 +23,14 @@ const AddRoom = () => {
         members: [currentUser.uid],
         creatAt: serverTimestamp()
       });
-      await setDoc(doc(db, "chats", dateNow), { messages: [] });
+      await setDoc(doc(db, "chats", `${dateNow}`), { messages: [] });
       dispatch(addRoomMDActions.change());
       toast.success("Add room success")
     }
   }
   return (
     <div
-      // onClick={() => {dispatch(addRoomMDActions.change())}}
+      
       className={`${
         open ? "block" : "hidden"
       } w-full h-screen flex justify-center items-center absolute top-0 left-0 right-0 bottom-0 z-10 bg-black-rgba`}

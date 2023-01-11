@@ -11,6 +11,7 @@ const ListUser = () => {
   const [chats, setChats] = useState([]);
   const { currentUser } = useAuth();
   const dispatch = useDispatch();
+  
   useEffect(() => {
     const getChats = () => {
       const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
@@ -29,16 +30,17 @@ const ListUser = () => {
   };
   //  console.log(Object.entries(chats));
   return (
-    <div className="border-t border-b border-gray-300 mt-2">
-      <h3>List Friend</h3>
-      {Object.entries(chats)
+    <div className="  mt-2 pb-6 h-48 overflow-y-auto">
+      
+      {chats && Object.entries(chats)
         ?.sort((a, b) => b[1].date - a[1].date)
-        .map((chat) => (
+        .map((chat, index) => (
           <Link to={`${chat[1].userInfo.uid}`} key={chat[0]}>
             <User
               className="userChat"
               handleSelect={handleSelect}
               info={chat[1].userInfo}
+              id={index}
             ></User>
           </Link>
         ))}

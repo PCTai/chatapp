@@ -28,15 +28,16 @@ const Navbar = ({open, setOpen}) => {
   }
   return (
     <div className='w-80 h-full border-r-2 border-gray-200 p-6 bg-gray-900 text-white overflow-y-auto'>
-      <div className="flex justify-between items-center border-b-2 border-gray-200">
-        <div className="flex">
-          <img className=' w-8 h-8 rounded-full' src={photoURL} alt="" />
+      <div className="flex pb-4 justify-between items-center border-b-2 border-gray-200">
+        <div className="flex items-center">
+          <img className=' w-10 h-10 rounded-full' src={photoURL} alt="" />
           <h3 className='ml-2'>{displayName}</h3>
 
         </div>
-        <button className='p-2 hover:text-green-500' onClick={handleLogout}>Logout</button>
+        <button className='p-2 hover:opacity-60 border-2 border-red-500 rounded-sm' onClick={handleLogout}>Logout</button>
       </div>
       <SearchUser/>
+      <h3 className="mt-4 mb-4">List Friend</h3>
       <ListUser/>
       <ListRoom props= {{open, setOpen}}/>
     </div>

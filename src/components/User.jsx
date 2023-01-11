@@ -1,16 +1,24 @@
-import React from 'react'
-import useAuth from '../customhook/useAuth';
+import React from "react";
+import { useParams } from "react-router-dom";
 
-const User = ({info, handleSelect}) => {
-    const {currentUser} =useAuth();
+const User = ({ info, handleSelect }) => {
+  const { "*": id } = useParams("id");
+
   return (
-    <div 
+    <div
       onClick={() => handleSelect(info)}
-      className='w-full p-2 pt-4 pb-4 flex cursor-pointer hover:bg-gray-800'>
-      <img src={info?.photoURL} alt="" className='w-5 h-5 rounded-full mr-2' />
+      className={`w-full p-2  flex items-center cursor-pointer hover:bg-gray-800 ${
+        id === info.uid ? "bg-gray-600" : ""
+      }`}
+    >
+      <img
+        src={info?.photoURL}
+        alt=""
+        className="w-10 h-10 rounded-full mr-2"
+      />
       <h3>{info?.displayName}</h3>
     </div>
-  )
-}
+  );
+};
 
-export default User
+export default User;

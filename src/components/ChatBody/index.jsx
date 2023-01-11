@@ -13,6 +13,7 @@ import { db, storage } from "../../firebase/config";
 import useAuth from "../../customhook/useAuth";
 import { useParams } from "react-router-dom";
 import { addRoomMDActions } from "../../Redux/slice/addRoomMD";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 const ChatBody = () => {
   const [messages, setMessages] = useState([]);
@@ -21,36 +22,36 @@ const ChatBody = () => {
   const [img, setImg] = useState(null);
   const { currentUser } = useAuth();
   const messageListRef = useRef(null);
-  const { id } = useParams("id");
+  const {id}   = useParams("id");
   const dispatch = useDispatch();
 
-
   useEffect(() => {
-    // console.log(id);
     setChat({});
     const res = onSnapshot(doc(db, "chats", id), (d) => {
+      console.log(id);
       if (d.exists()) {
         console.log(d.data());
         setMessages(d.data().messages);
         
       } else {
         const idd= currentUser.uid > id ? currentUser.uid + id : id + currentUser.uid;
-        console.log(idd);
+        // console.log(idd);
         onSnapshot(doc(db, "chats", idd), (doc) => {
           setMessages(doc.data().messages);
         })
       }
     });
     const getUser = async () => {
-      let docRef = doc(db, "users", id);
-      let docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        setChat(docSnap.data());
-      } else {
+      let docRef =null; 
+      let docSnap =null;
+      if(id.length<20 ){
         docRef = doc(db, "rooms", id);
         docSnap = await getDoc(docRef);
         setChat(docSnap.data())
+      }else{
+        docRef = doc(db, "users", id);
+        docSnap = await getDoc(docRef);
+        setChat(docSnap.data());
       }
     };
     getUser();
@@ -62,36 +63,69 @@ const ChatBody = () => {
   const handleSend = async (e) => {
     e.preventDefault();
     if (img) {
-      // const storageRef = ref(storage, uuid());
-      // const uploadTask = uploadBytesResumable(storageRef, img);
-      // uploadTask.on(
-      //   (error) => {
-      //     //TODO:Handle Error
-      //   },
-      //   () => {
-      //     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-      //       await updateDoc(doc(db, "chats", data.chatId), {
-      //         messages: arrayUnion({
-      //           id: uuid(),
-      //           text,
-      //           senderId: currentUser.uid,
-      //           date: Timestamp.now(),
-      //           img: downloadURL,
-      //         }),
-      //       });
-      //     });
-      //   }
-      // );
+      const storageRef = ref(storage, `images/${Date.now()}`);
+      const uploadTask = uploadBytesResumable(storageRef, img);
+      uploadTask.on(
+        (error) => {
+          //TODO:Handle Error
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            if(id.length>13){
+              const idd= currentUser.uid > id ? currentUser.uid + id : id + currentUser.uid
+              await updateDoc(doc(db, "chats", idd), {
+                messages: arrayUnion({
+                  text,
+                  senderId: currentUser.uid,
+                  date: Timestamp.now(),
+                  img: downloadURL,
+                  url :currentUser.photoURL,
+                }),
+              });
+            }
+            else{
+              await updateDoc(doc(db, "chats", id), {
+                messages: arrayUnion({
+                  text,
+                  senderId: currentUser.uid,
+                  date: Timestamp.now(),
+                  img: downloadURL,
+                  url: currentUser.photoURL,
+                }),
+              });
+            }
+          });
+        }
+      );
+      setImg(null);
+      setText("");
     } else {
       if (text.trim() !== "") {
-        await updateDoc(doc(db, "chats", id), {
-          messages: arrayUnion({
-            text,
-            senderId: currentUser.uid,
-            date: Timestamp.now(),
-            url: currentUser.photoURL,
-          }),
-        });
+       
+        if(id.length>13){
+          const idd= currentUser.uid > id ? currentUser.uid + id : id + currentUser.uid
+          await updateDoc(doc(db, "chats", idd), {
+            messages: arrayUnion({
+              text,
+              senderId: currentUser.uid,
+              date: Timestamp.now(),
+              url: currentUser.photoURL,
+            }),
+          });
+          
+        }else{
+          console.log("room");
+          await updateDoc(doc(db, "chats", id), {
+            messages: arrayUnion({
+              text,
+              senderId: currentUser.uid,
+              date: Timestamp.now(),
+              url: currentUser.photoURL,
+            }),
+          });
+        }
+
+        
         setText("");
       }
     }
@@ -99,7 +133,7 @@ const ChatBody = () => {
   useEffect(() => {
     // scroll to bottom after message changed
     if (messageListRef?.current) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+      messageListRef.current.scrollTop = messageListRef.current.scrollHeight +50;
     }
   }, [messages]);
 
@@ -139,7 +173,7 @@ const ChatBody = () => {
             )}
           </div>
           <div
-            className="flex-1 overflow-y-auto mt-2 pr-4"
+            className="flex-1 scroll-smooth overflow-y-auto mt-2 pr-4"
             ref={messageListRef}
           >
             {
@@ -156,7 +190,17 @@ const ChatBody = () => {
                 value={text}
                 onChange={(e) => setText(e.target.value)}
               />
-              <button className="p-4 pl-6 pr-6 bg-gray-900 text-white ">
+              <div className="mt-4">
+              <label htmlFor="file" className='flex items-center text-gray-900'> <i className="fa-regular fa-image text-2xl mr-2"></i></label>
+              <input
+                 
+                type="file"
+                id='file'
+                onChange={(e) => setImg(e.target.files[0])}
+                className="hidden"
+              />
+            </div>
+              <button className="p-4 pl-6 pr-6 bg-gray-900 text-white rounded-sm ">
                 Send
               </button>
             </div>

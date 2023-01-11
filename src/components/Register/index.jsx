@@ -62,40 +62,49 @@ const Login = () => {
   }
   return (
     <div className='container m-auto h-screen flex justify-center items-center'>
-      <div className='w-96 rounded-2xl bg-slate-100 shadow-md shadow-slate-300'>
-      {loading ? (<h3 className='text-center'>Loading .....</h3>) :
-          <form action="" className='w-96 p-6 m-auto bg-gray-900 rounded-lg text-white' onSubmit={handleSubmit}>
-            <h1 className='font-semibold text-center'>Register</h1>
-            <div className="mt-4">
-              <label htmlFor="name">Name</label>
+      <div className=' rounded-2xl bg-slate-100 shadow-md shadow-slate-300'>
+      {loading ? (<h3 className='text-center p-4 bg-gray-bg text-gray-200'>Loading .....</h3>) :
+          <form action="" className=' text-gray-300 max-w-3xl w-96 p-6 pl-10 pr-10 m-auto bg-gray-bg rounded-lg ' onSubmit={handleSubmit}>
+            <h1 className='font-semibold text-center text-3xl mb-6 '>Register</h1>
+            <div className="">
+              {/* <label htmlFor="name">Name</label> */}
               <input
+                required 
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                type="text" name='name' placeholder='Enter your name' className='text-gray-900 p-1 pl-4 pr-4 mt-4 border-2 outline-none rounded w-full' />
+                type="text" name='name' placeholder='Name' 
+                className='text-gray-200 bg-transparent  placeholder:text-gray-500 pt-4 pb-4 text-lg  border-b-2 border-gray-500 outline-none w-full' />
             </div>
-            <div className="mt-4">
-              <label htmlFor="email">Email</label>
+            <div className="">
+              {/* <label htmlFor="email">Email</label> */}
               <input
+                required 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                type="email" name='email' placeholder='Enter your email' className='text-gray-900 p-1 pl-4 pr-4 mt-4 border-2 outline-none rounded w-full' />
+                type="email" name='email' placeholder='Email' 
+                className='text-gray-200 bg-transparent  placeholder:text-gray-500 pt-4 pb-4 text-lg  border-b-2 border-gray-500 outline-none w-full' />
             </div>
-            <div className="mt-4">
-              <label htmlFor="password">Password</label>
+            <div className="">
+              {/* <label htmlFor="password">Password</label> */}
               <input
+                required 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                type="password" name='password' placeholder='Enter your password ' autoComplete="on"
-                className='text-gray-900 w-full p-1 pl-4 pr-4 mt-4 border-2 outline-none rounded' />
+                type="password" name='password' placeholder='Password ' autoComplete="on"
+                className='text-gray-200 bg-transparent  placeholder:text-gray-500 w-full pt-4 pb-4 text-lg  border-b-2 border-gray-500 outline-none' />
             </div>
             <div className="mt-4">
+              <label htmlFor="file" className='flex items-center text-gray-200'> <i class="fa-regular fa-image text-2xl mr-2"></i> <span className='text-sm'>Choose avatar</span></label>
               <input
+                required 
                 type="file"
+                id='file'
                 onChange={(e) => setFile(e.target.files[0])}
+                className="hidden"
               />
             </div>
-            <button type='submit' className='mt-6 p-2 w-full bg-white text-gray-900 rounded-lg font-medium'>Sign up</button>
-            <h3 className="mt-2 text-center text-sm">Already an account? <Link to={"/login"}>Login now</Link></h3>
+            <button type='submit' className='mt-6 p-2 w-full bg-green-500 text-white placeholder:text-gray-200 rounded-sm font-medium'>Sign up</button>
+            <Link to={"/login"} ><h3 className='mt-2 text-center text-sm'>Already an account?</h3></Link>
           </form>
         }
         
