@@ -56,8 +56,9 @@ const NavChat = () => {
           {users.length > 0 && (
             <div className="flex">
               {users.map((user, index) =>(
-                <img key={index} src={user.photoURL} className="h-5 w-5 rounded-full" alt={user.displayName} title={user.displayName} />
+                <img key={index} src={user.photoURL} className={`h-6 w-6 rounded-full ${index > 2 ? "hidden" : ""}`} alt={user.displayName} title={user.displayName} />
               ))}
+              {users.length> 2 && <div className="h-6 w-6 rounded-full text-center bg-gray-500 text-white text-sm font-semibold">+{users.length-3}</div>}
             </div>
           )}
         </div>

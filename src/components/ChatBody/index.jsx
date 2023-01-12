@@ -158,7 +158,6 @@ const ChatBody = () => {
                  
                 type="file"
                 id='file'
-                onch
                 onChange={handleChooseImage}
                 className="hidden"
               />
