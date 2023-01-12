@@ -10,6 +10,7 @@ const User = ({ info, handleSelect }) => {
       className={`w-full p-2  flex items-center cursor-pointer hover:bg-gray-800 ${
         id === info.uid ? "bg-gray-600" : ""
       }`}
+      title={info?.displayName}
     >
       <img
         src={info?.photoURL}

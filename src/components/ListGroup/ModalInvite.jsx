@@ -13,35 +13,32 @@ import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import useUsers from "../../customhook/useUsers";
 import { db } from "../../firebase/config";
 import { addRoomMDActions } from "../../Redux/slice/addRoomMD";
 
 const ModalInvite = () => {
   const [users, setUsers] = useState([]);
-  const [user, setUser] = useState(null);
+  const [result, setResult] = useState([]);
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const open = useSelector((state) => state.room.openInvite);
   const inputRef = useRef(null);
   const { "*": id } = useParams("id");
-  console.log(id);
-  const handleSearch = async () => {
-    const q = query(collection(db, "users"), where("displayName", "==", name));
+  const { users: listUser } = useUsers();
 
-    try {
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        setUser(doc.data());
-      });
-    } catch (err) {
-      toast.error(err);
-    }
+  const handleSearch = async () => {
+    setResult(() => {
+      return listUser.filter((uuser) =>
+        uuser.displayName.toLowerCase().includes(name.toLowerCase())
+      );
+    });
   };
 
   const handleSelect = (user) => {
     setUsers((prev) => [...prev, user]);
     setName("");
-    setUser(null);
+    setResult([]);
     inputRef.current.focus();
   };
   const handleOnkey = (e) => {
@@ -103,20 +100,29 @@ const ModalInvite = () => {
               setName(e.target.value);
             }}
           />
-          <div className={`${user ? "border-2 border-gray-300 mt-2" : ""}`}>
-            {user && (
-              <div
-                onClick={() => handleSelect(user)}
-                className="w-full p-2 pt-4 pb-4 flex cursor-pointer hover:bg-gray-800 hover:text-white"
-              >
-                <img
-                  src={user.photoURL}
-                  alt=""
-                  className="w-5 h-5 rounded-full mr-2"
-                />
-                <h3>{user.displayName}</h3>
-              </div>
-            )}
+          <div
+            className={` overflow-y-auto max-h-48
+            ${
+              result.length && result.length > 0
+              ? "border-2 border-gray-300 mt-2"
+              : ""
+            }`}
+          >
+            {result.length > 0 &&
+              result.map((user, index) => (
+                <div
+                  onClick={() => handleSelect(user)}
+                  className="w-full p-2 pt-4 pb-4 flex cursor-pointer hover:bg-gray-800 hover:text-white"
+                  key={index}
+                >
+                  <img
+                    src={user.photoURL}
+                    alt=""
+                    className="w-5 h-5 rounded-full mr-2"
+                  />
+                  <h3>{user.displayName}</h3>
+                </div>
+              ))}
           </div>
           <label htmlFor="name" className="block mt-4 ">
             List users

@@ -12,33 +12,27 @@ import {
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useAuth from "../customhook/useAuth";
+import useUsers from "../customhook/useUsers";
 import { db } from "../firebase/config";
-import User from "./User";
 
 const SearchUser = () => {
   const [username, setUsername] = useState("");
-  const [user, setUser] = useState(null);
+  const [listUser, setListUser] = useState([]);
   const { currentUser } = useAuth();
+  const { users } = useUsers();
+  // console.log(users);
 
   const handleSearch = async () => {
-    const q = query(
-      collection(db, "users"),
-      where("displayName", "==", username)
-    );
-
-    try {
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        setUser(doc.data());
-      });
-    } catch (err) {
-      toast.error(err);
-    }
+    setListUser(() => {
+      return users.filter(
+        (uuser) => uuser.displayName.toLowerCase().includes(username.toLowerCase())
+      );
+    });
   };
   const handleKey = (e) => {
     e.code === "Enter" && handleSearch();
   };
-  const handleSelect = async () => {
+  const handleSelect = async (user) => {
     //check whether the group(chats in firestore) exists, if not create
     const combinedId =
       currentUser.uid > user.uid
@@ -47,7 +41,7 @@ const SearchUser = () => {
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
 
-      if (!res.exists() && currentUser.uid!==user.uid) {
+      if (!res.exists() && currentUser.uid !== user.uid) {
         //create a chat in chats collection
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
 
@@ -73,7 +67,7 @@ const SearchUser = () => {
       }
     } catch (err) {}
 
-    setUser(null);
+    setListUser([]);
     setUsername("");
   };
   return (
@@ -85,21 +79,28 @@ const SearchUser = () => {
         onChange={(e) => setUsername(e.target.value)}
         value={username}
         type="text"
-        className="p-2 pl-4 text-black w-full outline-none"
+        className="p-2 pl-4 text-black w-full outline-none rounded-sm"
       />
-      <div className={`${user ? 'border-2 border-gray-300 mt-2' : ''}`}>
-        {user && (
-          <div 
-          onClick={handleSelect}
-            className="w-full p-2 pt-4 pb-4 flex cursor-pointer hover:bg-gray-800">
-            <img
-              src={user.photoURL}
-              alt=""
-              className="w-5 h-5 rounded-full mr-2"
-            />
-            <h3>{user.displayName}</h3>
-          </div>
-        )}
+      <div
+        className={` 
+        ${
+          listUser.length && listUser.length > 0 ? "border-2 border-gray-300 mt-2" : ""
+        }`}
+      >
+        {listUser.length > 0 &&
+          listUser.map((user, index) => (
+            <div
+              onClick={() =>handleSelect(user)}
+              className="w-full p-2 pt-4 pb-4 flex cursor-pointer hover:bg-gray-800"
+            >
+              <img
+                src={user.photoURL}
+                alt=""
+                className="w-5 h-5 rounded-full mr-2"
+              />
+              <h3>{user.displayName}</h3>
+            </div>
+          ))}
       </div>
     </div>
   );

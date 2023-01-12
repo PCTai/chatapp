@@ -12,6 +12,9 @@ const ChatRoom = () => {
       <Navbar/>
       <Routes>
         <Route path='/:id' element={<ChatBody/>}/>
+        <Route path='/' element={<h3 className="p-4 max-h-16 m-6 flex-1 flex items-center bg-gray-bg text-white rounded-md">
+          Please chooes friend or group !
+        </h3>}/>
         
       </Routes>
       <AddRoom/>
