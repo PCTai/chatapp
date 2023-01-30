@@ -32,17 +32,22 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true)
-    await signInWithEmailAndPassword(auth, email, password);
-    // console.log(userCredential.user);
-    
-    toast.success("Successfully logged in");
-    setLoading(false);
-    navigate('/home');
+   try {
+    const userCredential =await signInWithEmailAndPassword(auth, email, password);
+      toast.success("Successfully logged in");
+      setLoading(false);
+      navigate('/home');
+
+   
+   } catch (error) {
+    setLoading(false)
+    toast.error("Uncorrect email or password");
+   }
   }
   return (
     <div className='container m-auto h-screen flex justify-center items-center'>
       {
-        loading ? (<h3 className='text-center p-4 bg-gray-bg text-gray-200'>Loading .....</h3>) :
+        loading ? (<h3 className='text-center p-4 bg-gray-bg text-gray-200 rounded-sm'>Loading .....</h3>) :
           <form action="" className='text-gray-300 max-w-3xl w-96 p-6 pl-10 pr-10 m-auto bg-gray-bg rounded-lg ' onSubmit={handleLogin}>
             <h1 className='font-semibold text-center text-3xl mb-6 '>Login</h1>
            

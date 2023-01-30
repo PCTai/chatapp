@@ -1,4 +1,4 @@
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import {  doc, getDoc} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -11,6 +11,7 @@ const NavChat = () => {
   const [chat, setChat] = useState({});
   const { id } = useParams("id");
   const { users } = useUsers(chat);
+  
 
   useEffect(() => {
     setChat({});
@@ -55,10 +56,22 @@ const NavChat = () => {
           </button>
           {users.length > 0 && (
             <div className="flex">
-              {users.map((user, index) =>(
-                <img key={index} src={user.photoURL} className={`h-6 w-6 rounded-full ${index > 2 ? "hidden" : ""}`} alt={user.displayName} title={user.displayName} />
+              {users.map((user, index) => (
+                <img
+                  key={index}
+                  src={user.photoURL}
+                  className={`h-6 w-6 rounded-full ${
+                    index > 2 ? "hidden" : ""
+                  }`}
+                  alt={user.displayName}
+                  title={user.displayName}
+                />
               ))}
-              {users.length> 2 && <div className="h-6 w-6 rounded-full text-center bg-gray-500 text-white text-sm font-semibold">+{users.length-3}</div>}
+              {users.length > 3 && (
+                <div className="h-6 w-6 rounded-full text-center bg-gray-500 text-white text-xs leading-6 font-semibold">
+                  +{users.length - 3}
+                </div>
+              )}
             </div>
           )}
         </div>

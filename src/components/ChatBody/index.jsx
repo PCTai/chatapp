@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Messsage from "../Messsage";
 import {
   arrayUnion,
+  collection,
   doc,
   getDoc,
   onSnapshot,
+  query,
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -21,26 +23,26 @@ const ChatBody = () => {
   const [img, setImg] = useState(null);
   const { currentUser } = useAuth();
   const messageListRef = useRef(null);
-  const {id}   = useParams("id");
-  const idd = useMemo(() =>{
+  const { id } = useParams("id");
+
+  
+  const idd = useMemo(() => {
     return currentUser.uid > id ? currentUser.uid + id : id + currentUser.uid;
-  },[id, currentUser])
+  }, [id, currentUser]);
 
   useEffect(() => {
-    
     const res = onSnapshot(doc(db, "chats", id), (d) => {
       // console.log(id);
       if (d.exists()) {
         // console.log(d.data());
         setMessages(d.data().messages);
-        
       } else {
         onSnapshot(doc(db, "chats", idd), (doc) => {
           setMessages(doc.data().messages);
-        })
+        });
       }
     });
-    
+
     return () => {
       res();
       // getUser();
@@ -57,19 +59,17 @@ const ChatBody = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            if(id.length>13){
-              
+            if (id.length > 13) {
               await updateDoc(doc(db, "chats", idd), {
                 messages: arrayUnion({
                   text,
                   senderId: currentUser.uid,
                   date: Timestamp.now(),
                   img: downloadURL,
-                  url :currentUser.photoURL,
+                  url: currentUser.photoURL,
                 }),
               });
-            }
-            else{
+            } else {
               await updateDoc(doc(db, "chats", id), {
                 messages: arrayUnion({
                   text,
@@ -87,9 +87,7 @@ const ChatBody = () => {
       setText("");
     } else {
       if (text.trim() !== "") {
-       
-        if(id.length>13){
-          
+        if (id.length > 13) {
           await updateDoc(doc(db, "chats", idd), {
             messages: arrayUnion({
               text,
@@ -98,8 +96,7 @@ const ChatBody = () => {
               url: currentUser.photoURL,
             }),
           });
-          
-        }else{
+        } else {
           // console.log("room");
           await updateDoc(doc(db, "chats", id), {
             messages: arrayUnion({
@@ -111,23 +108,23 @@ const ChatBody = () => {
           });
         }
 
-        
         setText("");
       }
     }
   };
 
-  const handleChooseImage =(e ) =>{
+  const handleChooseImage = (e) => {
     setImg(e.target.files[0]);
-    e.target.value= null;
-  }
+    e.target.value = null;
+  };
   useEffect(() => {
     // scroll to bottom after message changed
     if (messageListRef?.current) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight +50;
+      messageListRef.current.scrollTop =
+        messageListRef.current.scrollHeight + 50;
     }
   }, [messages]);
-
+  // console.log(img.name);
   return (
     <div className="flex-1 flex flex-col h-full p-6 ">
       {id !== "null" ? (
@@ -137,11 +134,9 @@ const ChatBody = () => {
             className="flex-1 scroll-smooth overflow-y-auto mt-2 pr-4"
             ref={messageListRef}
           >
-            {
-              messages.map((message, index) => (
-                <Messsage key={index} message={message}/>
-              )
-            )}
+            {messages.map((message, index) => (
+              <Messsage key={index} message={message} />
+            ))}
           </div>
           <form action="" onSubmit={handleSend}>
             <div className="flex pt-4 border-t-2 border-gray-300">
@@ -152,16 +147,22 @@ const ChatBody = () => {
                 onChange={(e) => setText(e.target.value)}
               />
 
-              <div className="mt-4">
-              <label htmlFor="file" className='flex items-center text-gray-900'> <i className="fa-regular fa-image text-2xl mr-4"></i></label>
-              <input
-                 
-                type="file"
-                id='file'
-                onChange={handleChooseImage}
-                className="hidden"
-              />
-            </div>
+              <div className="mt-4 relative">
+                {/* {img && <div className="absolute -top-full right-0  bg-gray-400 inline"><span className="text-xs ">{img?.name}</span></div>} */}
+                <label
+                  htmlFor="file"
+                  className="flex items-center text-gray-900"
+                >
+                  {" "}
+                  <i className={`fa-regular fa-image text-2xl mr-4 ${img ? 'text-green-500' :""}`}></i>
+                </label>
+                <input
+                  type="file"
+                  id="file"
+                  onChange={handleChooseImage}
+                  className="hidden"
+                />
+              </div>
               <button className="p-4 pl-6 pr-6 bg-gray-900 text-white rounded-sm ">
                 Send
               </button>

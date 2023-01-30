@@ -63,7 +63,7 @@ const Login = () => {
   return (
     <div className='container m-auto h-screen flex justify-center items-center'>
       <div className=' rounded-2xl bg-slate-100 shadow-md shadow-slate-300'>
-      {loading ? (<h3 className='text-center p-4 bg-gray-bg text-gray-200'>Loading .....</h3>) :
+      {loading ? (<h3 className='text-center p-4 bg-gray-bg text-gray-200 rounded-sm'>Loading .....</h3>) :
           <form action="" className=' text-gray-300 max-w-3xl w-96 p-6 pl-10 pr-10 m-auto bg-gray-bg rounded-lg ' onSubmit={handleSubmit}>
             <h1 className='font-semibold text-center text-3xl mb-6 '>Register</h1>
             <div className="">

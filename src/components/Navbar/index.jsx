@@ -1,6 +1,6 @@
 import { signOut } from 'firebase/auth';
 import React from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import useAuth from '../../customhook/useAuth';
@@ -15,7 +15,6 @@ const Navbar = ({open, setOpen}) => {
   const {displayName, photoURL} =currentUser;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const handleLogout = () =>{
     signOut(auth).then(() =>{
       toast.success("Loggout out");
@@ -30,7 +29,9 @@ const Navbar = ({open, setOpen}) => {
     <div className='w-80 h-full border-r-2 border-gray-200 p-6 bg-gray-900 text-white overflow-y-auto'>
       <div className="flex pb-4 justify-between items-center border-b-2 border-gray-200">
         <div className="flex items-center">
+          <div className="border-4 border-white rounded-full">
           <img className=' w-10 h-10 rounded-full' src={photoURL} alt="" />
+          </div>
           <h3 className='ml-2'>{displayName}</h3>
 
         </div>

@@ -12,11 +12,15 @@ const User = ({ info, handleSelect }) => {
       }`}
       title={info?.displayName}
     >
+      <div className={`w-12 h-12 rounded-full mr-2  ${
+          id === info.uid ? "border-4 border-green-500" : ""
+        }`}>
       <img
         src={info?.photoURL}
         alt=""
-        className="w-10 h-10 rounded-full mr-2"
+        className={`w-full h-full  rounded-full  `}
       />
+      </div>
       <h3>{info?.displayName}</h3>
     </div>
   );

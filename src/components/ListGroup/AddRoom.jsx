@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { db } from "../../firebase/config";
 import{ addRoomMDActions } from '../../Redux/slice/addRoomMD'
 import useAuth from '../../customhook/useAuth'
+import { useEffect } from "react";
 
 const AddRoom = () => {
   const dispatch = useDispatch();
@@ -25,9 +26,14 @@ const AddRoom = () => {
       });
       await setDoc(doc(db, "chats", `${dateNow}`), { messages: [] });
       dispatch(addRoomMDActions.change());
+      window.location.reload();
       toast.success("Add room success")
     }
   }
+  // useEffect(() =>{
+  //   // window.location.reload();
+
+  // },[dispatch])
   return (
     <div
       

@@ -61,6 +61,7 @@ const ModalInvite = () => {
         ],
       });
       setUsers(null);
+      window.location.reload();
     }
     // dispatch(addRoomMDActions.changeInvite());
   };

@@ -45,7 +45,7 @@ const Messsage = ({ message }) => {
             />
           </div>
           <div className="">
-            {message.img && <img  src={message.img} className="rounded-sm mb-1" alt="img" />}
+            {message.img && <img  src={message.img} className="rounded-sm mb-1 border max-w-sm" alt="img" />}
             {message.text && (
               <div className={`flex ${currentUser.uid === message.senderId ? 'justify-end' :''}`}>
                 <div className="border-2 rounded-md bg-slate-200 border-gray-300 p-2 w-fit ">
