@@ -7,24 +7,9 @@ import ChatRoom from './components/ChatRoom';
 import useAuth from './customhook/useAuth';
 
 function App() {
-  // const dispatch = useDispatch();
+  
   const {currentUser} =useAuth();
-  // useEffect(() =>{
-  //   onAuthStateChanged(auth, (user) =>{
-  //       if(user){
-  //         const {uid, displayName, photoURL, email: mail}= user;
-  //         dispatch(appActions.setUser({
-  //           uid: uid,
-  //           displayName: displayName,
-  //           email: mail,
-  //           photoURL: photoURL,
-  //         }))
-  //       }
-  //       else{
-  //         dispatch(appActions.setUser({}))
-  //       }
-  //   })
-  // })
+  
   return (
     <Routes>
       <Route path='login' element={currentUser ? <Navigate to={'/home'}/> :<Login/>}/>

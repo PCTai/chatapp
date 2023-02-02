@@ -1,28 +1,18 @@
-import { async } from "@firebase/util";
+
 import {
-  arrayUnion,
-  collection,
   doc,
   getDoc,
-  getDocs,
-  query,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import React, { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import useUsers from "../../customhook/useUsers";
 import { db } from "../../firebase/config";
-import { addRoomMDActions } from "../../Redux/slice/addRoomMD";
 
-const ModalInvite = () => {
+const ModalInvite = ({openModal, hideModal}) => {
   const [users, setUsers] = useState([]);
   const [result, setResult] = useState([]);
-  const dispatch = useDispatch();
   const [name, setName] = useState("");
-  const open = useSelector((state) => state.room.openInvite);
   const inputRef = useRef(null);
   const { "*": id } = useParams("id");
   const { users: listUser } = useUsers();
@@ -63,25 +53,28 @@ const ModalInvite = () => {
       setUsers(null);
       window.location.reload();
     }
-    // dispatch(addRoomMDActions.changeInvite());
+    
   };
   const handleRemoveUser = (id) => {
     setUsers((prev) => prev.filter((e) => e.uid !== id));
   };
+function handleHideModal() {
+  hideModal(prev => !prev);
+  setUsers([]);
+  setResult([]);
+  setName('');
+}
   return (
     <div>
       <div
-        // onClick={() => {dispatch(addRoomMDActions.change())}}
         className={`${
-          open ? "block" : "hidden"
-        } w-full h-screen flex justify-center items-center absolute top-0 left-0 right-0 bottom-0 z-10 bg-black-rgba`}
+          openModal && openModal ? "block" : "hidden"
+        } w-full h-screen flex justify-center items-center fixed top-0 left-0 right-0 bottom-0 z-10 bg-black-rgba`}
       >
         <div className="w-96 rounded-md  p-4 bg-white">
           <div className="text-right">
             <i
-              onClick={() => {
-                dispatch(addRoomMDActions.changeInvite());
-              }}
+              onClick={handleHideModal}
               className="fa-solid fa-xmark p-2 text-lg text-red-500 cursor-pointer"
             ></i>
           </div>

@@ -1,24 +1,20 @@
 import { signOut } from 'firebase/auth';
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import useAuth from '../../customhook/useAuth';
 import { auth } from '../../firebase/config';
-import { chatActions } from '../../Redux/slice/chatUser';
 import ListRoom from '../ListGroup';
 import ListUser from '../ListUser';
 import SearchUser from '../SearchUser';
 
-const Navbar = ({open, setOpen}) => {
+const Navbar = () => {
   const {currentUser} =useAuth();
   const {displayName, photoURL} =currentUser;
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const handleLogout = () =>{
     signOut(auth).then(() =>{
       toast.success("Loggout out");
-      dispatch(chatActions.reset({}));
       navigate('/login')
     }).catch((error) =>{
       toast.error(error.message);
@@ -40,7 +36,7 @@ const Navbar = ({open, setOpen}) => {
       <SearchUser/>
       <h3 className="mt-4 mb-4">List Friend</h3>
       <ListUser/>
-      <ListRoom props= {{open, setOpen}}/>
+      <ListRoom />
     </div>
   )
 }

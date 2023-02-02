@@ -1,16 +1,11 @@
 import {
-  collection,
   doc,
   getDoc,
-  getDocs,
-  query,
   serverTimestamp,
   setDoc,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import React, { useState } from "react";
-import { toast } from "react-toastify";
 import useAuth from "../customhook/useAuth";
 import useUsers from "../customhook/useUsers";
 import { db } from "../firebase/config";
@@ -80,6 +75,7 @@ const SearchUser = () => {
         value={username}
         type="text"
         className="p-2 pl-4 text-black w-full outline-none rounded-sm"
+        onBlur={() => setListUser([])}
       />
       <div
         className={` 
@@ -92,6 +88,7 @@ const SearchUser = () => {
             <div
               onClick={() =>handleSelect(user)}
               className="w-full p-2 pt-4 pb-4 flex cursor-pointer hover:bg-gray-800"
+              key={index}
             >
               <img
                 src={user.photoURL}

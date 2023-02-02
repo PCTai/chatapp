@@ -1,13 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+
 import Messsage from "../Messsage";
 import {
   arrayUnion,
-  collection,
   doc,
-  getDoc,
   onSnapshot,
-  query,
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -32,9 +29,7 @@ const ChatBody = () => {
 
   useEffect(() => {
     const res = onSnapshot(doc(db, "chats", id), (d) => {
-      // console.log(id);
       if (d.exists()) {
-        // console.log(d.data());
         setMessages(d.data().messages);
       } else {
         onSnapshot(doc(db, "chats", idd), (doc) => {
@@ -45,9 +40,9 @@ const ChatBody = () => {
 
     return () => {
       res();
-      // getUser();
     };
   }, [id, currentUser, idd]);
+
   const handleSend = async (e) => {
     e.preventDefault();
     if (img) {
@@ -97,7 +92,6 @@ const ChatBody = () => {
             }),
           });
         } else {
-          // console.log("room");
           await updateDoc(doc(db, "chats", id), {
             messages: arrayUnion({
               text,
@@ -124,7 +118,7 @@ const ChatBody = () => {
         messageListRef.current.scrollHeight + 50;
     }
   }, [messages]);
-  // console.log(img.name);
+  
   return (
     <div className="flex-1 flex flex-col h-full p-6 ">
       {id !== "null" ? (

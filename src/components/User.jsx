@@ -7,7 +7,7 @@ const User = ({ info, handleSelect }) => {
   return (
     <div
       onClick={() => handleSelect(info)}
-      className={`w-full p-2  flex items-center cursor-pointer hover:bg-gray-800 ${
+      className={`w-full p-2  flex items-center rounded-sm cursor-pointer hover:bg-gray-800 ${
         id === info.uid ? "bg-gray-600" : ""
       }`}
       title={info?.displayName}

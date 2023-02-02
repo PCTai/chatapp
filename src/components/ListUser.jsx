@@ -14,13 +14,9 @@ const ListUser = () => {
   
   useEffect(() => {
     const getChats = () => {
-      const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
+      onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
         setChats(doc.data());
       });
-
-      return () => {
-        unsub();
-      };
     };
 
     currentUser.uid && getChats();
@@ -28,12 +24,11 @@ const ListUser = () => {
   const handleSelect = (user) => {
     dispatch(chatActions.changeUser({ currentUser, user }));
   };
-  //  console.log(Object.entries(chats));
   return (
     <div className="  mt-2 pb-6  max-h-48 overflow-y-auto">
       
       {chats && Object.entries(chats)
-        ?.sort((a, b) => b[1].date - a[1].date)
+        ?.sort((a, b) => a[1].userInfo.displayName.toLowerCase() > b[1].userInfo.displayName.toLowerCase()? 1 : -1)
         .map((chat, index) => (
           <Link to={`${chat[1].userInfo.uid}`} key={chat[0]}>
             <User

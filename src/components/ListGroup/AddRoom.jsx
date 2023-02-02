@@ -1,51 +1,50 @@
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { db } from "../../firebase/config";
-import{ addRoomMDActions } from '../../Redux/slice/addRoomMD'
-import useAuth from '../../customhook/useAuth'
-import { useEffect } from "react";
+import { addRoomMDActions } from "../../Redux/slice/addRoomMD";
+import useAuth from "../../customhook/useAuth";
 
-const AddRoom = () => {
+const AddRoom = ({ openModal, hideModal }) => {
   const dispatch = useDispatch();
-  const open = useSelector(state => state.room.open);
-  const [name, setName] = useState('');
-  const [desc, setDesc] = useState('');
-  const {currentUser} = useAuth();
+  const [name, setName] = useState("");
+  const [desc, setDesc] = useState("");
+  const { currentUser } = useAuth();
 
-  const handleSubmit = async(e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(name.trim() !== ""){
-      const dateNow= Date.now();
+    if (name.trim() !== "") {
+      const dateNow = Date.now();
       await setDoc(doc(db, "rooms", `${dateNow}`), {
         name,
         desc,
         members: [currentUser.uid],
-        creatAt: serverTimestamp()
+        creatAt: serverTimestamp(),
       });
       await setDoc(doc(db, "chats", `${dateNow}`), { messages: [] });
       dispatch(addRoomMDActions.change());
-      window.location.reload();
-      toast.success("Add room success")
-    }
-  }
-  // useEffect(() =>{
-  //   // window.location.reload();
 
-  // },[dispatch])
+      toast.success("Add room success");
+      window.location.reload();
+    }
+  };
+  function handleHideModal() {
+    hideModal((prev) => !prev);
+    setName("");
+    setDesc("");
+  }
   return (
     <div
-      
       className={`${
-        open ? "block" : "hidden"
-      } w-full h-screen flex justify-center items-center absolute top-0 left-0 right-0 bottom-0 z-10 bg-black-rgba`}
+        openModal && openModal ? "block" : "hidden"
+      } w-full h-screen flex justify-center items-center fixed top-0 left-0 right-0 bottom-0 z-10 bg-black-rgba text-gray-900`}
     >
       <div className="w-96 rounded-md shadow-lg shadow-gray-300 p-4 bg-white">
         <form action="" onSubmit={handleSubmit}>
           <div className="text-right">
             <i
-              onClick={() => {dispatch(addRoomMDActions.change())}}
+              onClick={handleHideModal}
               className="fa-solid fa-xmark p-2 text-lg text-red-500 cursor-pointer"
             ></i>
           </div>
@@ -55,26 +54,28 @@ const AddRoom = () => {
           </label>
           <input
             type="text"
-            name="name"
+            value={name}
             id=""
             className="p-2 pl-4 outline-none border border-gray-500 w-full rounded-md"
-            onChange={(e) =>{setName(e.target.value)}}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
           />
           <label htmlFor="name" className="block mt-4 ">
             Description
           </label>
           <input
             type="text"
-            name="name"
+            value={desc}
             id=""
             className="p-2 pl-4 outline-none border border-gray-500  w-full rounded-md"
-            onChange={(e) =>{setDesc(e.target.value)}}
-
+            onChange={(e) => {
+              setDesc(e.target.value);
+            }}
           />
           <button
             type="submit"
             className=" mt-6 block text-center bg-gray-900 text-white w-full p-2 rounded-md"
-
           >
             Add
           </button>
