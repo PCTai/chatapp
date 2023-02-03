@@ -67,7 +67,6 @@ const Login = () => {
           <form action="" className=' text-gray-300 max-w-3xl w-96 p-6 pl-10 pr-10 m-auto bg-gray-bg rounded-lg ' onSubmit={handleSubmit}>
             <h1 className='font-semibold text-center text-3xl mb-6 '>Register</h1>
             <div className="">
-              {/* <label htmlFor="name">Name</label> */}
               <input
                 required 
                 value={username}
@@ -76,7 +75,6 @@ const Login = () => {
                 className='text-gray-200 bg-transparent  placeholder:text-gray-500 pt-4 pb-4 text-lg  border-b-2 border-gray-500 outline-none w-full' />
             </div>
             <div className="">
-              {/* <label htmlFor="email">Email</label> */}
               <input
                 required 
                 value={email}
@@ -85,7 +83,6 @@ const Login = () => {
                 className='text-gray-200 bg-transparent  placeholder:text-gray-500 pt-4 pb-4 text-lg  border-b-2 border-gray-500 outline-none w-full' />
             </div>
             <div className="">
-              {/* <label htmlFor="password">Password</label> */}
               <input
                 required 
                 value={password}
@@ -94,7 +91,7 @@ const Login = () => {
                 className='text-gray-200 bg-transparent  placeholder:text-gray-500 w-full pt-4 pb-4 text-lg  border-b-2 border-gray-500 outline-none' />
             </div>
             <div className="mt-4">
-              <label htmlFor="file" className='flex items-center text-gray-200'> <i class="fa-regular fa-image text-2xl mr-2"></i> <span className='text-sm'>Choose avatar</span></label>
+              <label htmlFor="file" className='flex items-center text-gray-200'> <i class={` ${file ? "text-green-500" : ''} fa-regular fa-image text-2xl mr-2`}></i> <span className='text-sm'>Choose avatar</span></label>
               <input
                 required 
                 type="file"

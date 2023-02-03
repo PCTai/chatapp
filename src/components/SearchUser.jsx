@@ -41,7 +41,7 @@ const SearchUser = () => {
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
 
         //create user chats
-        console.log("up date");
+        // console.log("up date");
         await updateDoc(doc(db, "userChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {
             uid: user.uid,
@@ -75,7 +75,7 @@ const SearchUser = () => {
         value={username}
         type="text"
         className="p-2 pl-4 text-black w-full outline-none rounded-sm"
-        onBlur={() => setListUser([])}
+        // onBlur={() => setListUser([])}
       />
       <div
         className={` 

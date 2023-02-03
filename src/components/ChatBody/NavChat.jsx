@@ -1,10 +1,11 @@
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, deleteField, doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../customhook/useAuth";
 import useUsers from "../../customhook/useUsers";
 import { db } from "../../firebase/config";
 import ModalInvite from "../ListGroup/ModalInvite";
+import {catId} from '../../Helper'
 
 const NavChat = () => {
   const [open, setOpen] = useState(false);
@@ -38,25 +39,38 @@ const NavChat = () => {
   const handleLeaveGroup = async () => {
     const docRef = doc(db, "rooms", id);
     const docSnap = await getDoc(docRef);
-    
+
     const { members: membersRoom } = docSnap.data();
-    
 
     const roomRef = doc(db, "rooms", id);
     await updateDoc(roomRef, {
-      members: [
-        ...membersRoom.filter((member) => member !== currentUser.uid),
-      ],
+      members: [...membersRoom.filter((member) => member !== currentUser.uid)],
     });
-    if(membersRoom.filter((member) => member !== currentUser.uid).length===0){
+    if (
+      membersRoom.filter((member) => member !== currentUser.uid).length === 0
+    ) {
       await deleteDoc(doc(db, "rooms", id));
     }
 
-    navigate('/home');
+    navigate("/home");
     window.location.reload();
   };
-  function handleUnFriend() {
-    
+
+  async function handleUnFriend() {
+    console.log("un");
+    const userRef = doc(db, "userChats", currentUser.uid);
+    console.log(currentUser.uid, catId(id, currentUser.uid))
+    const chatid= catId(id, currentUser.uid)
+    // Remove the  field from the document
+    await updateDoc(userRef, {
+      [`${chatid}`]: deleteField(),
+    });
+    await updateDoc(doc(db, "userChats",id), {
+      [`${chatid}`]: deleteField(),
+    });
+    await deleteDoc(doc(db, "chats", chatid));
+    navigate("/home");
+    window.location.reload();
   }
   return (
     <>
@@ -69,8 +83,8 @@ const NavChat = () => {
         </div>
         {chat.uid ? (
           <button onClick={handleUnFriend} className="mr-4">
-          <i className="fa-solid fa-user-xmark"></i>
-        </button>
+            <i className="fa-solid fa-user-xmark"></i>
+          </button>
         ) : (
           <div className="flex items-center relative">
             <button onClick={handleLeaveGroup} className="mr-4">
