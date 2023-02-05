@@ -50,6 +50,7 @@ const NavChat = () => {
       membersRoom.filter((member) => member !== currentUser.uid).length === 0
     ) {
       await deleteDoc(doc(db, "rooms", id));
+      await deleteDoc(doc(db, "chats", id));
     }
 
     navigate("/home");
